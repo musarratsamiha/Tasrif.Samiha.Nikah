@@ -49,3 +49,45 @@ button:focus-visible{outline:3px solid #8c633c;outline-offset:3px}
 /* Keep the original envelope's TS seal visible when closed; hide the button only after tap. */
 .scene-envelope.opening .open-button{opacity:0;pointer-events:none;transition:opacity .25s}
 @media(prefers-reduced-motion:reduce){.scene-envelope.opening .opened-artwork{animation:none;opacity:1;transform:none}}
+
+
+/* V3: distinct staged paper-opening motion; final illustration remains visible. */
+.scene-envelope .opened-artwork {animation:none;opacity:0;transform:none;will-change:clip-path,opacity;clip-path:inset(100% 0 0 0)}
+.scene-envelope.opening .opened-artwork {
+  animation:unfold-envelope 2.5s .30s cubic-bezier(.2,.7,.2,1) both;
+}
+@keyframes unfold-envelope {
+  0% {opacity:0;clip-path:inset(100% 0 0 0)}
+  13% {opacity:1;clip-path:inset(57% 0 0 0)}
+  36% {opacity:1;clip-path:inset(47% 0 0 0)}
+  75%,100% {opacity:1;clip-path:inset(0 0 0 0)}
+}
+/* A temporary parchment glint moves upward with the invitation, then gives way
+   entirely to the original illustrated letter and its exact calligraphy. */
+.envelope-lift {position:absolute;z-index:6;left:13%;width:74%;top:34%;height:25%;border-radius:3px;background:linear-gradient(160deg,rgba(255,252,244,.92),rgba(242,218,182,.88));border:1px solid rgba(180,138,77,.45);box-shadow:0 -4px 18px rgba(107,73,44,.10);opacity:0;pointer-events:none;transform:translateY(63%) scaleY(.75);transform-origin:center bottom}
+.scene-envelope.opening .envelope-lift {animation:parchment-emerges 1.85s .55s cubic-bezier(.16,.7,.24,1) both}
+@keyframes parchment-emerges {
+  0% {opacity:0;transform:translateY(63%) scaleY(.75)}
+  15% {opacity:.8}
+  55% {opacity:.65;transform:translateY(2%) scaleY(1)}
+  85%,100% {opacity:0;transform:translateY(-18%) scaleY(1)}
+}
+/* Small animated lantern-light halos: like a soft evening breeze moving warm
+   light around the illustrated lanterns. No original artwork is repositioned. */
+.breeze-lights {position:absolute;inset:0;z-index:3;pointer-events:none}
+.breeze-light {position:absolute;width:15%;height:9%;border-radius:50%;background:radial-gradient(ellipse,rgba(255,236,166,.53),rgba(251,171,58,.14) 44%,transparent 71%);filter:blur(5px);opacity:0;transform-origin:50% -80%;mix-blend-mode:screen}
+.ceremony-light-left{left:16%;top:77.5%;--sway-rotate:2deg;--phase:-1.2s}
+.ceremony-light-right{right:6%;top:79.5%;--sway-rotate:-2deg;--phase:-2.7s}
+.countdown-light-one{left:12%;top:53.0%;--sway-rotate:3deg;--phase:-.8s}
+.countdown-light-two{left:2%;top:61.0%;--sway-rotate:-3deg;--phase:-3s}
+.scene-ceremony.active .breeze-light,.scene-countdown.active .breeze-light {animation:gentle-breeze 4.5s ease-in-out var(--phase) infinite alternate}
+@keyframes gentle-breeze {
+  0% {opacity:.3;transform:translateX(-5px) rotate(calc(var(--sway-rotate) * -1)) scale(.90)}
+  50% {opacity:.64;transform:translateX(1px) rotate(0deg) scale(1.05)}
+  100% {opacity:.42;transform:translateX(5px) rotate(var(--sway-rotate)) scale(.95)}
+}
+@media (prefers-reduced-motion: reduce) {
+  .scene-envelope.opening .opened-artwork {animation:none;opacity:1;clip-path:none}
+  .scene-envelope.opening .envelope-lift {animation:none;opacity:0}
+  .scene-ceremony.active .breeze-light,.scene-countdown.active .breeze-light{animation:none;opacity:.4}
+}

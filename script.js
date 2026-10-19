@@ -52,7 +52,7 @@
       opening = false;
       controls.hidden = false;
       show(0); // Keep the opened envelope and letter visible until Next is tapped.
-    }, 3700);
+    }, 3300);
   }
 
   function replay() {
